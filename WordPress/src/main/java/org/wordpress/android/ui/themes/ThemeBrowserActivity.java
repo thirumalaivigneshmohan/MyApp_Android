@@ -407,14 +407,18 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         String toastText = getString(R.string.no_network_message);
 
         if (NetworkUtils.isNetworkAvailable(this)) {
-            if (mCurrentTheme != null) {
+            if (mCurrentTheme != null && (themeId != null || !themeId.isEmpty())) {
                 boolean isCurrentTheme = mCurrentTheme.getId().equals(themeId);
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);
 
                 switch (type) {
                     case PREVIEW:
-                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE, themeProperties);
+                        if (isCurrentTheme) {
+                            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_CUSTOMIZE_ACCESSED, themeProperties);
+                        } else {
+                            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE, themeProperties);
+                        }
                         break;
                     case DEMO:
                         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_DEMO_ACCESSED, themeProperties);
